@@ -1,0 +1,8 @@
+From: John Smith <jsmith@domain.com>
+Reply-to: nobody@domain.com
+Subject: Import Test
+Content-type: text/html
+
+
+This is a test message.
+
