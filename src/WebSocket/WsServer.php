@@ -35,14 +35,12 @@ class WsServer
 
         // Init connection manager
         $this->manager = new ConnectionManager(
-            admin_pass: $this->admin_pass
+            admin_pass: $this->admin_pass, 
             php_namespaces: $this->php_namespaces, 
             screen_logging: $this->screen_logging, 
             armor: $this->armor, 
             debugger: $this->debugger
         );
-
-        }
 
     }
 
