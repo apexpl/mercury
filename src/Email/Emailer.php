@@ -104,7 +104,7 @@ class Emailer extends SMTPConnections
     /**
      * Quick send
      */
-    public function quickSend(string $to_email, string $to_name, string $from_email, string $from_name, string $subject, string $message, string $content_type = 'text/plain', array $attachments)
+    public function quickSend(string $to_email, string $to_name, string $from_email, string $from_name, string $subject, string $message, string $content_type = 'text/plain', array $attachments = [])
     {
 
         // Define e-mail message
