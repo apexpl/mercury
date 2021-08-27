@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace Apex\Mercury\WebSocket;
 
+use Apex\Mercury\Interfaces\WsClientInterface;
+
 /**
  * Websocket client
  */
-class WsClient
+class WsClient implements WsClientInterface
 {
 
     /**

@@ -4,13 +4,14 @@ declare(strict_types = 1);
 namespace Apex\Mercury\Email;
 
 use Apex\Debugger\Interfaces\DebuggerInterface;
+use Apex\Mercury\Interfaces\EmailerInterface;
 use redis;
 
 
 /**
  * E-mailer
  */
-class Emailer extends SMTPConnections
+class Emailer extends SMTPConnections implements EmailerInterface
 {
 
     /**

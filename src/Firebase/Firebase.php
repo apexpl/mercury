@@ -4,12 +4,13 @@ declare(strict_types = 1);
 namespace Apex\Mercury\Firebase;
 
 use Apex\Mercury\Firebase\FirebaseConfig;
+use Apex\Mercury\Interfaces\FirebaseClientInterface;
 
 
 /**
  * Frebase class
  */
-class Firebase
+class Firebase implements FirebaseClientInterface
 {
 
     /**

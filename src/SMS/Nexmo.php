@@ -6,11 +6,12 @@ namespace Apex\Mercury\SMS;
 use Apex\Mercury\Exceptions\{MercuryNexmoSendException, MercuryInvalidPhoneException};
 use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
+use Apex\Mercury\Interfaces\SmsClientInterface;
 
 /**
  * Send SMS messages via Nexmo
  */
-class Nexmo
+class Nexmo implements SmsClientInterface
 {
 
     /**
