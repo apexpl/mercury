@@ -22,7 +22,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
 
         // Ensure any items passed match item class
         foreach ($this->items as $value) { 
-            if (!$value instanceof EmailContact::$item_class) { 
+            if (!$value instanceof EmailContact::class) { 
                 $class = is_object($value) ? $value::class : GetType($value);
                 throw new \InvalidArgumentException("The class " . __CLASS__ . " only allows items of " . EmailContact::class . " but received item of $class");
             }
@@ -38,7 +38,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     {
 
         // Enforce item_class
-        if (!$value instanceof EmailContact::$item_class) { 
+        if (!$value instanceof EmailContact::class) { 
             $class = is_object($value) ? $value::class : GetType($value);
             throw new \InvalidArgumentException("The class " . __CLASS__ . " only allows items of " . EmailContact::$item_class . " but received item of $class");
         }
