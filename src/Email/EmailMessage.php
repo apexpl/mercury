@@ -249,9 +249,17 @@ class EmailMessage
     /**
      * Get bcc
      */
-    public function getBcc():string
+    public function getBcc():array
     {
         return $this->bcc;
+    }
+
+    /**
+     * Get attachment
+     */
+    public function getAttachments():array
+    {
+        return $this->attachments;
     }
 
     /**
