@@ -11,7 +11,7 @@ use redis;
 /**
  * E-mailer
  */
-class Emailer extends SMTPConnections implements EmailerInterface
+Class Emailer extends SMTPConnections implements EmailerInterface
 {
 
     /**
