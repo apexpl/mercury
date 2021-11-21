@@ -28,8 +28,8 @@ class EmailMessage
         private array $cc = [], 
         private array $bcc = [], 
         private string $subject = '', 
-        private string $content_type = 'text/plain', 
-        private string $message = ''
+        private string $text_message = '',
+        private string $html_message = ''
     ) { 
 
     }
@@ -111,14 +111,6 @@ class EmailMessage
     }
 
     /**
-     * Set content type
-     */
-    public function setContentType(string $content_type):void
-    {
-        $this->content_type = $content_type;
-    }
-
-    /**
      * Set subject
      */
     public function setSubject(string $subject):void
@@ -129,9 +121,17 @@ class EmailMessage
     /**
      * Set message contents
      */
-    public function setMessage(string $message):void
+    public function setTextMessage(string $message):void
     {
-        $this->message = $message;
+        $this->text_message = $message;
+    }
+
+    /**
+     * Set html message
+     */
+    public function setHtmlMessage(string $message):void
+    {
+        $this->html_message = $message;
     }
 
     /**
@@ -263,14 +263,6 @@ class EmailMessage
     }
 
     /**
-     * Get content-type
-     */
-    public function getContentType():string
-    {
-        return $this->content_type;
-    }
-
-    /**
      * Get subject
      */
     public function getSubject():string
@@ -281,7 +273,23 @@ class EmailMessage
     /**
      * Return message
      */
-    public function getMessage():string
+    public function getTextMessage():string
+    {
+        return $this->text_message;
+    }
+
+    /**
+     * Get html message
+     */
+    public function getHtmlMessage():string
+    {
+        return $this->html_message;
+    }
+
+    /**
+     * Get message body
+     */
+    public function getMessageBody():string
     {
         return $this->message;
     }
@@ -321,8 +329,20 @@ class EmailMessage
 
         // Check no attachments
         if (count($this->attachments) == 0) { 
-            $this->headers = $headers . "Content-type: $this->content_type\r\n";
-            return;
+            if ($this->text_message == '') {
+                $content_type = 'text/html';
+                $this->message = $this->html_message;
+            } elseif ($this->html_message == '') {
+                $content_type = 'text/plain';
+                $this->message = $this->text_message;
+            } else {
+                $content_type = 'multipart/mixed';
+            }
+
+            if ($content_type != 'multipart/mixed') {
+                $this->headers = $headers . "Content-type: $content_type\r\n";
+                return;
+            }
         }
 
         // Finish headers
@@ -332,13 +352,23 @@ class EmailMessage
 
         // Start message
         $contents = "This is a multi-part message in MIME format.\r\n";
-        $contents .= '--' . $boundary . "\r\n";
 
         // Add message contents
-        $contents .= "Content-type: $this->content_type\r\n";
-        $contents .= "Content-transfer-encoding: 7bit\r\n\r\n";
-        $contents .= $this->message . "\r\n";
-        $contents .= '--' . $boundary;
+        if ($this->text_message != '') {
+            $contents .= '--' . $boundary . "\r\n";
+            $contents .= "Content-type: text/plain\r\n";
+            $contents .= "Content-transfer-encoding: 7bit\r\n\r\n";
+            $contents .= $this->text_message . "\r\n";
+            $contents .= '--' . $boundary;
+        }
+
+        // Add html message, if needed
+        if ($this->html_message != '') {
+            $contents .= "Content-type: text/html\r\n";
+            $contents .= "Content-transfer-encoding: 7bit\r\n\r\n";
+            $contents .= $this->html_message . "\r\n";
+            $contents .= '--' . $boundary;
+        }
 
         // Add attachments
         foreach ($this->attachments as $filename => $file_contents) { 
@@ -413,7 +443,7 @@ class EmailMessage
                 $this->subject = $value;
             }
         }
-        $this->message = $body;
+        $this->text_message = $body;
 
     }
 
