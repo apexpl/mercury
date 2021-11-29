@@ -99,7 +99,7 @@ Class Emailer extends SMTPConnections implements EmailerInterface
     public function sendPhpMail(EmailMessage $msg)
     {
         $msg->formatMessage();
-        mail($msg->getToLine(), $msg->getSubject(), $msg->getMessage(), $msg->getHeaders());
+        mail($msg->getToLine(), $msg->getSubject(), $msg->getMessageBody(), $msg->getHeaders());
     }
 
     /**
