@@ -34,7 +34,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Set offset
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value):void
     {
 
         // Enforce item_class
@@ -55,7 +55,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Offset exists
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset):bool
     {
         return isset($this->items[$offset]);
     }
@@ -63,7 +63,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Offset unset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset):void
     {
         unset($this->items[$offset]);
     }
@@ -71,7 +71,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Offset get
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset):mixed
     {
         return isset($this->items[$offset]) ? $this->items[$offset] : null;
     }
@@ -79,7 +79,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Rewind
      */
-    public function rewind()
+    public function rewind():void
     {
         $this->position = 0;
     }
@@ -87,7 +87,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Current
      */
-    public function current()
+    public function current():mixed
     {
         return isset($this->items[$this->position]) ? $this->items[$this->position] : null;
     }
@@ -95,7 +95,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Key
      */
-    public function key()
+    public function key():mixed
     {
         return $this->position;
     }
@@ -103,7 +103,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Next
      */
-    public function next()
+    public function next():void
     {
         ++$this->position;
     }
@@ -111,7 +111,7 @@ class EmailContactCollection           implements \ArrayAccess, \Iterator, \Coun
     /**
      * Valid
      */
-    public function valid()
+    public function valid():bool
     {
         return $this->position >= count($this->items) ? false : true;
     }
