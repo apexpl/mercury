@@ -71,7 +71,7 @@ Class Emailer extends SMTPConnections implements EmailerInterface
 
         // Message contents
         //fwrite($sock, "To: " . $msg->getToLine() . "\r\n");
-        //fwrite($sock, "Subject: " . $msg->getSubject() . "\r\n");
+        fwrite($sock, "Subject: " . $msg->getSubject() . "\r\n");
         fwrite($sock, $msg->getHeaders() . "\r\n");
         fwrite($sock, $msg->getMessageBody() . "\r\n.\r\n");
 
