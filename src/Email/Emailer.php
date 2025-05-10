@@ -44,7 +44,7 @@ Class Emailer extends SMTPConnections implements EmailerInterface
             $this->sendPhpMail($msg);
             return true;
         }
-
+echo "Start\n"; exit;
         // MAIL FROM
         $res = $this->write($sock, "MAIL FROM: <" . $msg->getFromEmail() . ">");
         if (!str_starts_with($res, '250')) { 

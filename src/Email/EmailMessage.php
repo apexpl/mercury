@@ -305,9 +305,8 @@ class EmailMessage
     /**
      * Format message
      */
-    public function formatMessage():void
+    public function formatMessage(): void
     {
-
         // Start headers
         $headers = "To: " . $this->getToLine() . "\r\n";
         $headers .= "From: " . $this->getFromLine() . "\r\n";
@@ -327,25 +326,20 @@ class EmailMessage
             $headers .= "Bcc: <" . implode('>, <', $this->bcc) . ">\r\n";
         }
 
-        // Check no attachments
-        if (count($this->attachments) == 0) { 
+        // Check no attachments and single-part message
+        if (count($this->attachments) == 0 && ($this->text_message == '' || $this->html_message == '')) {
             if ($this->text_message == '') {
                 $content_type = 'text/html';
                 $this->message = $this->html_message;
-            } elseif ($this->html_message == '') {
+            } else {
                 $content_type = 'text/plain';
                 $this->message = $this->text_message;
-            } else {
-                $content_type = 'multipart/mixed';
             }
-
-            if ($content_type != 'multipart/mixed') {
-                $this->headers = $headers . "Content-type: $content_type\r\n";
-                return;
-            }
+            $this->headers = $headers . "Content-type: $content_type\r\n";
+            return;
         }
 
-        // Finish headers
+        // Use multipart structure
         $boundary = "_----------=" . time() . "100";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: multipart/mixed; boundary=\"$boundary\"";
@@ -353,35 +347,42 @@ class EmailMessage
         // Start message
         $contents = "This is a multi-part message in MIME format.\r\n";
 
-        // Add message contents
-        if ($this->text_message != '') {
+        // Add text and HTML parts in a multipart/alternative section
+        if ($this->text_message != '' || $this->html_message != '') {
+            $alt_boundary = "_----------=" . time() . "101";
             $contents .= '--' . $boundary . "\r\n";
-            $contents .= "Content-type: text/plain\r\n";
-            $contents .= "Content-transfer-encoding: 7bit\r\n\r\n";
-            $contents .= $this->text_message . "\r\n";
-            $contents .= '--' . $boundary;
-        }
+            $contents .= "Content-type: multipart/alternative; boundary=\"$alt_boundary\"\r\n\r\n";
 
-        // Add html message, if needed
-        if ($this->html_message != '') {
-            $contents .= "Content-type: text/html\r\n";
-            $contents .= "Content-transfer-encoding: 7bit\r\n\r\n";
-            $contents .= $this->html_message . "\r\n";
-            $contents .= '--' . $boundary;
+            // Add plain text part
+            if ($this->text_message != '') {
+                $contents .= '--' . $alt_boundary . "\r\n";
+                $contents .= "Content-type: text/plain\r\n";
+                $contents .= "Content-transfer-encoding: 7bit\r\n\r\n";
+                $contents .= $this->text_message . "\r\n";
+            }
+
+            // Add HTML part
+            if ($this->html_message != '') {
+                $contents .= '--' . $alt_boundary . "\r\n";
+                $contents .= "Content-type: text/html\r\n";
+                $contents .= "Content-transfer-encoding: 7bit\r\n\r\n";
+                $contents .= $this->html_message . "\r\n";
+            }
+
+            $contents .= '--' . $alt_boundary . "--\r\n";
         }
 
         // Add attachments
         foreach ($this->attachments as $filename => $file_contents) { 
-            $contents .= "\r\n";
+            $contents .= '--' . $boundary . "\r\n";
             $contents .= "Content-Disposition: attachment; filename=\"$filename\"\r\n";
             $contents .= "Content-Transfer-Encoding: base64\r\n";
             $contents .= "Content-Type: application/octet-stream; name=\"$filename\"\r\n\r\n";
             $contents .= base64_encode($file_contents) . "\r\n\r\n";
-            $contents .= '--' . $boundary;
         }
 
         // Finish message
-        $contents .= "--\r\n\r\n";
+        $contents .= '--' . $boundary . "--\r\n";
         $this->message = $contents;
         $this->headers = $headers;
     }
